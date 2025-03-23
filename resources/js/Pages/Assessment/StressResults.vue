@@ -1,15 +1,77 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, usePage, router } from '@inertiajs/vue3';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 // Get assessment results from Laravel backend
 const page = usePage();
 const latestResult = page.props.latest_result || { total_score: 0, severity: "Unknown", impact: "Not provided" };
 const pastResults = page.props.past_results || []; // Store previous assessments
 
-// Function to retake the assessment
-const retakeAssessment = () => {
-    router.visit('/assessment/anxiety', { method: 'get', preserveState: false });
+// Store assessment data for navigation
+let lastAssessment = null;
+
+// Function to confirm retake the assessment
+const confirmRetakeAssessment = () => {
+    // Show first alert (confirmation to retake assessment)
+    Swal.fire({
+        title: "Do you want to retake the assessment?",
+        text: "Your current results have been saved. If you'd like to retake the assessment, you can proceed.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Retake",
+        cancelButtonText: "No, Stay",
+        width: "600px", // Wider modal for better readability
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, show the privacy policy notice
+            showPrivacyPolicy();
+        }
+    });
+};
+
+// Function to show the second prompt (Data Privacy Act Notice)
+const showPrivacyPolicy = () => {
+    Swal.fire({
+        title: "Data Privacy Notice",
+        html: `
+            <p><strong>Republic Act No. 10173 - Data Privacy Act of 2012</strong></p>
+            <p>This website collects, processes, and stores personal data in accordance with the Data Privacy Act of 2012 (RA 10173). By proceeding, you acknowledge and agree that:</p>
+            <ul style="text-align:left;">
+                <li>✅ Your responses will be collected solely for providing insights into your mental health.</li>
+                <li>✅ Your data will be kept confidential and will not be shared without consent.</li>
+                <li>✅ This assessment is for informational purposes only and is not a medical diagnosis.</li>
+                <li>✅ You have the right to access, correct, or request deletion of your personal data.</li>
+            </ul>
+            <p>For more details, visit the <a href="https://www.privacy.gov.ph" target="_blank" style="color:blue;">National Privacy Commission (NPC)</a>.</p>
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "I Accept",
+        cancelButtonText: "Cancel",
+        width: "600px",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If accepted, show the loading animation
+            showLoadingAnimation();
+        }
+    });
+};
+
+// Function to show a loading animation before proceeding
+const showLoadingAnimation = () => {
+    Swal.fire({
+        title: "Preparing Your Assessment...",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+            setTimeout(() => {
+                // Redirect to the assessment page after a delay
+                window.location.href = route('stress_assessment');
+            }, 600); // Simulating a delay before redirecting
+        }
+    });
 };
 
 // Function to go back to the dashboard
@@ -40,7 +102,7 @@ const goToAssessmentHistory = () => {
                     <!-- Action Buttons -->
                     <div class="mt-6 flex flex-col sm:flex-row gap-4">
                         <button
-                            @click="retakeAssessment"
+                            @click="confirmRetakeAssessment"
                             class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                             Retake Assessment
                         </button>

@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { BarChart3, Users, FileText, Calendar } from 'lucide-vue-next';
 
+// Receiving the props passed from the controller
 const props = defineProps({
   totalUsers: Number,
   totalAssessments: Number,
@@ -10,7 +11,7 @@ const props = defineProps({
   totalReports: Number,
 });
 
-// Define admin stats with real-time data and correct routes
+// Define the stats for the admin dashboard
 const adminStats = [
   { title: "Total Users", value: props.totalUsers, icon: Users, route: route('admin.users') },
   { title: "Assessments Taken", value: props.totalAssessments, icon: FileText, route: route('admin.assessments') },

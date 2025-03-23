@@ -78,8 +78,8 @@ const submitAssessment = async () => {
     <AuthenticatedLayout>
         <Head title="Stress Assessment" />
 
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
-            <div class="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-300 dark:border-gray-700">
+        <div class="min-h-screen bg-blue-100 dark:bg-gray-900 flex items-center justify-center">
+            <div class="w-full max-w-4xl bg-blue-200 dark:bg-gray-800 shadow-lg rounded-lg border border-blue-300 dark:border-gray-700">
 
                 <!-- Reusable Header -->
                 <Header title="Perceived Stress Scale (PSS)" subtitle="In the last month, how often have you experienced the following?" />

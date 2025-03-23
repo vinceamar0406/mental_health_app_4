@@ -5,6 +5,7 @@ import { useForm } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
 import Navbar from '@/Components/Navbar.vue';
 
+
 defineProps({
   canLogin: Boolean,
   canRegister: Boolean,
