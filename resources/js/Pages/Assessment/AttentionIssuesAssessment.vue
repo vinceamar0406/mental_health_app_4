@@ -1,6 +1,27 @@
 <script setup>
+import { onMounted } from 'vue';
+import Swal from 'sweetalert2'; // Import SweetAlert
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+
+onMounted(() => {
+    // Show SweetAlert when the component is mounted
+    Swal.fire({
+        title: 'Maintenance Mode',
+        text: 'The assessment is temporarily unavailable and is under maintenance. We apologize for the inconvenience.',
+        icon: 'warning',
+        showConfirmButton: false, // Hides the default "OK" button
+        showCancelButton: true,  // Shows only the "Go Back" button
+        cancelButtonText: 'Go Back', // Text for the "Go Back" button
+        reverseButtons: true, // To place the "Go Back" button on the left
+        focusCancel: true, // Focus on "Go Back" button by default
+    }).then((result) => {
+        if (result.isDismissed) {
+            // Redirect to the previous page when "Go Back" is clicked
+            window.history.back();
+        }
+    });
+});
 </script>
 
 <template>

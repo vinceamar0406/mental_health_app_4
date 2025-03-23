@@ -82,7 +82,9 @@ window.onpopstate = function () {
         retakeScreening(); // Reinitiate the process if the user goes back
     }
 };
-
+const goToAssessmentHistory = () => {
+    router.get('/assessment/history');
+};
 </script>
 
 <template>

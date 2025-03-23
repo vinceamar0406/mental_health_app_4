@@ -1,6 +1,28 @@
 <script setup>
+import { onMounted } from 'vue';
+import Swal from 'sweetalert2'; // Import SweetAlert
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import { useRouter } from 'vue-router'; // To navigate back
+
+onMounted(() => {
+    // Show SweetAlert when the component is mounted
+    Swal.fire({
+        title: 'Maintenance Mode',
+        text: 'The assessment is temporarily unavailable and is under maintenance. We apologize for the inconvenience.',
+        icon: 'warning',
+        showConfirmButton: false, // Hides the "OK" button
+        showCancelButton: true,  // Shows only the "Go Back" button
+        cancelButtonText: 'Go Back', // Text for the "Go Back" button
+        reverseButtons: true, // To place the "Go Back" button on the left
+        focusCancel: true, // Focus on "Go Back" button by default
+    }).then((result) => {
+        if (result.isDismissed) {
+            // Redirect to the previous page when "Go Back" is clicked
+            window.history.back();
+        }
+    });
+});
 </script>
 
 <template>
@@ -16,7 +38,7 @@ import { Head } from '@inertiajs/vue3';
                         </h2>
                         <p class="mt-2">Answer the following questions to assess your substance use disorder symptoms.</p>
 
-                        <!-- Substance Use Disorder Assessment Form -->
+                        <!-- Substance Use Disorder Assessment Form (Optional if you still want to keep it) -->
                         <form class="mt-4">
                             <div class="mb-4">
                                 <label class="block text-gray-700 dark:text-gray-300">Question 1</label>

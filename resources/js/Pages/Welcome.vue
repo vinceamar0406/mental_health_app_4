@@ -171,7 +171,7 @@ const submitForm = () => {
       <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center">
         <img src="/images/2x2.jpg" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Your Name">
         <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">John Michael Vincent Baldon</h4>
-        <p class="text-blue-400">Researcher and Web Developer</p>
+        <p class="text-blue-400">Researcher and Web Development</p>
       </div>
 
       <!-- Team Member 2 -->
@@ -185,13 +185,13 @@ const submitForm = () => {
             <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center">
         <img src="https://source.unsplash.com/150x150/?woman,face" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
         <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Matt John Santos</h4>
-        <p class="text-blue-400">Researcher and Documentation</p>
+        <p class="text-blue-400">Researcher and Machine Learning Integration</p>
       </div>
             <!-- Team Member 4 -->
             <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center">
         <img src="https://source.unsplash.com/150x150/?woman,face" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
         <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Xian Angelo Martinez</h4>
-        <p class="text-blue-400">Researcher and Documentation</p>
+        <p class="text-blue-400">Researcher and User Interface </p>
       </div>
     </div>
   </div>
