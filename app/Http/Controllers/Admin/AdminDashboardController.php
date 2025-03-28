@@ -10,11 +10,15 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Notification;
 
 class AdminDashboardController extends Controller
 {
     public function index(): Response
     {
+        // Fetch notifications for the admin user
+        $notifications = auth()->user()->notifications();// Get latest notifications
+
         // Fetch data for the dashboard
         $totalUsers = User::count();
         $totalAssessments = MentalHealthAssessment::count();
@@ -60,6 +64,7 @@ class AdminDashboardController extends Controller
             'totalAppointments' => $totalAppointments,
             'recentActivities' => $recentActivities,
             'assessments' => $assessments,
+            'notifications' => $notifications,
         ]);
     }
 }

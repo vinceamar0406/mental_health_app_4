@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
+use App\Models\User;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,5 +40,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Prefetch assets for better performance
         Vite::prefetch(concurrency: 3);
+
+        // Register the UserObserver to observe the User model
+        User::observe(UserObserver::class);
     }
 }

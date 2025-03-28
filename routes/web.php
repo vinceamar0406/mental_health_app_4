@@ -103,10 +103,29 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ]);
     })->name('admin.assessments');
 
+    // ✅ Notifications Route (Updated)
+    Route::get('/notifications', function () {
+        $notifications = auth()->user()->notifications; // Get notifications for the authenticated user
+        // Use Inertia to return notifications to the frontend
+        return Inertia::render('Notifications', [
+            'notifications' => $notifications
+        ]);
+    })->name('admin.notifications');
+
+    // ✅ Mark Notification as Read Route
+    Route::post('/notifications/{notification}/read', function ($notificationId) {
+        $notification = auth()->user()->notifications()->findOrFail($notificationId);
+        $notification->markAsRead();
+        return response()->json(['message' => 'Notification marked as read']);
+    })->name('admin.notifications.read');
+
 
     // ✅ Other Admin Pages
     Route::get('/appointments', [AdminController::class, 'appointments'])->name('admin.appointments');
     Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
+
+
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
 });
 
 // Appointment Routes
@@ -115,6 +134,7 @@ Route::post('/appointments/{appointment}/approve', [AppointmentController::class
 Route::post('/appointments/{appointment}/complete', [AppointmentController::class, 'completeAppointment'])->name('appointments.complete');
 
 Route::get('/recent-activities', [RecentActivityController::class, 'index']);
+
 
 
 Route::middleware(['auth'])->group(function () {
