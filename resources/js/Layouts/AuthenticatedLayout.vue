@@ -163,6 +163,8 @@ const startAssessment = () => {
 
               <!-- ✅ Updated Navigation Links -->
               <div v-if="!route().current('admin.home')" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div v-if="!route().current('admin.users')" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
                 <NavLink :href="route('assessment.history')" :active="route().current('assessment.history')">
                   Assessment History
                 </NavLink>
@@ -174,7 +176,7 @@ const startAssessment = () => {
                 </NavLink>
               </div>
             </div>
-
+         </div>
             <div class="hidden sm:ms-6 sm:flex sm:items-center">
               <div class="relative ms-3">
                 <Dropdown align="right" width="48">

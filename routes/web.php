@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnxietyAssessmentController;
 use App\Http\Controllers\AppointmentController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\UserInteractionController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RecentActivityController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -84,14 +86,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // ✅ Admin Routes
 Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('/home', function () {
-        return Inertia::render('AdminHome', [
-            'totalUsers' => \App\Models\User::count(),
-            'totalAssessments' => \App\Models\Assessment::count(),
-            'totalAppointments' => \App\Models\Appointment::count(),
-            'totalReports' => \App\Models\Report::count(),
-        ]);
-    })->name('admin.home');
+    // ✅ Admin Dashboard (using controller)
+    Route::get('/home', [AdminDashboardController::class, 'index'])->name('admin.home');
 
     // ✅ User List Page
     Route::get('/users', function () {
@@ -103,7 +99,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // ✅ Assessment Taken Page
     Route::get('/assessments', function () {
         return Inertia::render('AssessmentTaken', [
-            'assessments' => \App\Models\Assessment::with('user')->get()
+            'assessments' => \App\Models\MentalHealthAssessment::with('user')->get(),
         ]);
     })->name('admin.assessments');
 
@@ -112,9 +108,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/appointments', [AdminController::class, 'appointments'])->name('admin.appointments');
     Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
 });
+
+// Appointment Routes
 Route::post('/appointments/request', [AppointmentController::class, 'requestAppointment'])->name('appointments.request');
 Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approveAppointment'])->name('appointments.approve');
 Route::post('/appointments/{appointment}/complete', [AppointmentController::class, 'completeAppointment'])->name('appointments.complete');
+
+Route::get('/recent-activities', [RecentActivityController::class, 'index']);
 
 
 Route::middleware(['auth'])->group(function () {
