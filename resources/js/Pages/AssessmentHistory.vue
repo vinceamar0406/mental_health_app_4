@@ -99,7 +99,7 @@ const requestAppointment = async (assessmentId) => {
                     <div v-if="sortedAssessments.length > 0">
                         <table class="w-full border-collapse border border-gray-300">
                             <thead>
-                                <tr class="bg-gray-100 text-gray-800 text-left">
+                                <tr class="bg-blue-100 text-gray-800 text-left">
                                     <th scope="col" class="py-4 px-5 border-b">Date</th>
                                     <th scope="col" class="py-4 px-5 border-b">Type</th>
                                     <th scope="col" class="py-4 px-5 border-b">Score</th>

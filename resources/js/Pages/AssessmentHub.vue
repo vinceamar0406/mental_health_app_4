@@ -143,7 +143,7 @@ const showLoadingAnimation = (assessment) => {
         </template>
 
         <!-- Assessment Hub Content -->
-        <div class="flex flex-col items-center justify-center px-8 py-12 bg-blue-50 dark:bg-blue-900 min-h-screen">
+        <div class="flex flex-col items-center justify-center px-8 py-12 bg-blue-100 dark:bg-blue-900 min-h-screen">
             <p class="text-lg text-center mb-8 text-black dark:text-white">
                 Select an assessment below to evaluate your mental health condition.
             </p>
