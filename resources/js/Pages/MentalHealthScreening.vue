@@ -15,7 +15,8 @@ const validateResponses = () => {
 };
 
 // Function to confirm before submitting
-const confirmSubmission = () => {
+// Function to confirm before submitting
+const confirmSubmission = async () => {
     if (!validateResponses()) {
         Swal.fire({
             title: "Incomplete Responses",
@@ -26,22 +27,25 @@ const confirmSubmission = () => {
         return;
     }
 
-    Swal.fire({
-        title: "Confirm Submission",
-        text: "Are you sure you want to submit your responses? Once submitted, they cannot be changed.",
+    const result = await Swal.fire({
+        title: "Submit Screening?",
+        text: "Do you want to save your responses in the database?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Yes, Submit",
-        cancelButtonText: "Cancel",
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            submitScreening();
-        }
+        confirmButtonText: "Yes, save it!",
+        cancelButtonText: "No, just view results",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33"
     });
+
+    if (result.isConfirmed) {
+        submitScreening(); // Save responses to the database
+    } else {
+        viewResultsOnly(); // Skip saving and just show results
+    }
 };
 
-// Function to submit the screening
+// Function to submit the screening (Save to Database)
 const submitScreening = () => {
     Swal.fire({
         title: "Submitting...",
@@ -57,14 +61,20 @@ const submitScreening = () => {
         preserveScroll: true,
         onSuccess: () => {
             Swal.fire({
-                title: "Submission Successful!",
-                text: "Your screening has been submitted successfully.",
+                title: "Saved!",
+                text: "Your screening has been recorded.",
                 icon: "success",
-                confirmButtonText: "OK",
+                showConfirmButton: false,
+                timer: 2000
             });
+
             form.reset(); // Clear form after successful submission
+
+            setTimeout(() => {
+                window.location.href = route('screening.results'); // Redirect to results page
+            }, 2000);
         },
-        onError: (errors) => {
+        onError: () => {
             Swal.fire({
                 title: "Submission Failed",
                 text: "An error occurred while submitting. Please try again later.",
@@ -73,6 +83,21 @@ const submitScreening = () => {
             });
         }
     });
+};
+
+// Function to skip saving and just show results
+const viewResultsOnly = () => {
+    Swal.fire({
+        title: "Redirecting...",
+        text: "Please wait while we load your results.",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    setTimeout(() => {
+        Swal.close();
+        window.location.href = route('screening.results'); // Redirect without saving
+    }, 500);
 };
 </script>
 

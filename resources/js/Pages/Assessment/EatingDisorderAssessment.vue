@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Header from '@/Components/Header.vue'; // Import the reusable header
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { ref, computed, reactive } from 'vue';
+import Swal from 'sweetalert2';
 
 const page = usePage();
 const isLoading = ref(false);
@@ -34,38 +35,89 @@ const severity = computed(() => {
 const submitAssessment = async () => {
     if (isLoading.value) return;
 
-    // Ensure all questions are answered before submission
-    const unanswered = Object.values(answers).some(val => val === null);
-    if (unanswered) {
-        alert("Please answer all questions before submitting.");
-        return;
+    // Find the first unanswered question
+    const unansweredKey = Object.keys(answers).find(key => answers[key] === null || answers[key] === "");
+
+    if (unansweredKey) {
+        Swal.fire({
+            icon: "error",
+            title: "Incomplete Answers",
+            text: "Please answer all questions before submitting.",
+            confirmButtonColor: "#3085d6",
+        });
+
+        return; // Stop further execution
     }
 
-    isLoading.value = true;
+    // Confirmation modal
+    const result = await Swal.fire({
+        title: "Submit Assessment?",
+        text: "Do you want to save the assessment in the database?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, save it!",
+        cancelButtonText: "No, just view results",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33"
+    });
 
-    try {
-        router.post('/assessment/eating-disorder/store', {
-            user_id: page.props.auth?.user?.id,
-            responses: Object.values(answers), // Collect responses
-            total_score: totalScore.value, // SCOFF score
-            severity: severity.value, // Assigned severity level
-            impact: answers.impact, // Added impact to submission
-        }, {
-            replace: true,
-            onSuccess: () => {
-                isLoading.value = false;
-                router.get('/assessment/eating-disorder/results'); // Redirect to results page
-            },
-            onError: () => {
-                isLoading.value = false;
-                alert("Failed to submit assessment. Please try again.");
+    if (result.isConfirmed) {
+        Swal.fire({
+            title: "Submitting...",
+            text: "Please wait while we save your assessment.",
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
         });
 
-    } catch (error) {
-        console.error("Error submitting assessment:", error);
-        alert("Failed to submit assessment. Please try again.");
-        isLoading.value = false;
+        isLoading.value = true;
+        try {
+            router.post('/assessment/eating-disorder/store', {
+                user_id: page.props.auth?.user?.id,
+                responses: Object.values(answers).slice(0, 7),
+                impact: answers.impact,
+                total_score: totalScore.value,
+                severity: severity.value
+            }, {
+                replace: true,
+                onSuccess: () => {
+                    isLoading.value = false;
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Your assessment has been recorded.",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+
+                    setTimeout(() => {
+                        router.get('/assessment/eating-disorder/results');
+                    }, 2000);
+                },
+                onError: () => {
+                    isLoading.value = false;
+                    Swal.fire("Error", "Failed to submit assessment. Please try again.", "error");
+                }
+            });
+
+        } catch (error) {
+            console.error("Error submitting assessment:", error);
+            Swal.fire("Error", "Failed to submit assessment. Please try again.", "error");
+            isLoading.value = false;
+        }
+    } else {
+        Swal.fire({
+            title: "Redirecting...",
+            text: "Please wait while we load your results.",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        setTimeout(() => {
+            Swal.close(); // Close loading before redirecting
+            router.get('/assessment/eating-disorder/results');
+        }, 500);
     }
 };
 </script>

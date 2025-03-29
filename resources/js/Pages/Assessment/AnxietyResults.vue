@@ -16,11 +16,11 @@ const confirmRetakeAssessment = () => {
     // Show first alert (confirmation to retake assessment)
     Swal.fire({
         title: "Do you want to retake the assessment?",
-        text: "Your current results have been saved. If you'd like to retake the assessment, you can proceed.",
+        text: "If you choose to retake the assessment, your previous responses will remain unchanged. Would you like to proceed?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Yes, Retake",
-        cancelButtonText: "No, Stay",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         width: "600px", // Wider modal for better readability
         customClass: {
             container: 'swal2-container',
