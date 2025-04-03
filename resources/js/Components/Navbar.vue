@@ -3,7 +3,7 @@
       <!-- Logo & Brand Name -->
       <div class="flex items-center">
         <img src="/images/counselcarelogo.png" class="h-12 w-auto drop-shadow-md" alt="Counsel & Care Logo">
-        <h1 class="ml-3 text-3xl font-semibold text-gray-800 tracking-wide">Counsel Care</h1>
+        <h1 class="ml-3 text-3xl font-semibold text-gray-800 tracking-wide">Counsel & Care</h1>
       </div>
 
       <!-- Desktop Navigation -->

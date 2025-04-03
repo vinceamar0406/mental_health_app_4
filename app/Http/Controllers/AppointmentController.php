@@ -59,9 +59,8 @@ class AppointmentController extends Controller
 
     // Set the appointment status to approved and store the scheduled date
     $appointment->status = 'approved';
-    $appointment->scheduled_at = $request->input('scheduled_at'); // Set the scheduled date
+    $appointment->appointment_date = $request->scheduled_at; // This should save the date in the appointment_date field
     $appointment->save();
-
     return response()->json([
         'message' => 'Appointment approved and scheduled successfully.',
         'appointment' => $appointment, // Return the updated appointment with the scheduled date
@@ -69,21 +68,28 @@ class AppointmentController extends Controller
 }
 public function completeAppointment(Appointment $appointment)
 {
-    // Ensure only admins can complete
+    // Ensure only admins can complete the appointment
     if (Auth::user()->role !== 'admin') {
         return response()->json(['error' => 'Unauthorized access.'], 403);
     }
 
+    // Check if the appointment is already completed
+    if ($appointment->status === 'completed') {
+        return response()->json(['error' => 'Appointment is already completed.'], 400);
+    }
+
+    // Mark the appointment as completed and set the completion date
     $appointment->status = 'completed';
-    $appointment->completed_at = now(); // or use any relevant date field
+    $appointment->completed_at = now(); // or use any other relevant date field
     $appointment->save();
 
+    // Return the updated appointment data along with a success message
     return response()->json([
-        'message' => 'Appointment marked as completed.',
-        'appointment' => $appointment, // Return the updated appointment data
+        'message' => 'Appointment marked as completed successfully.',
+        'appointment' => $appointment,  // Return the updated appointment data
     ]);
-
 }
+
 
 }
 
