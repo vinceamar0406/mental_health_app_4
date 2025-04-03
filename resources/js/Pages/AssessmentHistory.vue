@@ -52,30 +52,49 @@ const requestAppointment = async (assessmentId) => {
             const response = await axios.post(route('appointments.request'), { assessment_id: assessmentId });
 
             if (response.status === 200) {
-                // Update the assessment status dynamically
+                // Find the assessment after the API request
                 const assessment = assessments.value.find(a => a.id === assessmentId);
-                if (assessment) {
-                    assessment.appointment_status = 'pending';
-                }
 
-                Swal.fire(
-                    'Appointment Requested!',
-                    'Your appointment request has been sent and is pending approval.',
-                    'success'
-                );
+                if (assessment) {
+                    // Only update if the assessment exists
+                    assessment.appointment_status = 'pending';
+                    Swal.fire(
+                        'Appointment Requested!',
+                        'Your appointment request has been sent and is pending approval.',
+                        'success'
+                    );
+                } else {
+                    console.error('Assessment not found');
+                    Swal.fire('Error!', 'Assessment not found. Please try again.', 'error');
+                }
+            } else {
+                // If it's not a 200 response, handle it as an error
+                throw new Error('Unexpected response from the server.');
             }
         } catch (error) {
             console.error("Error requesting appointment:", error);
-            Swal.fire(
-                'Error!',
-                error.response?.data?.message || 'An unexpected error occurred. Please try again.',
-                'error'
-            );
+
+            if (error.response) {
+                console.error("Error response:", error.response);
+                Swal.fire(
+                    'Error!',
+                    error.response?.data?.message || 'An unexpected error occurred. Please try again.',
+                    'error'
+                );
+            } else {
+                console.error("General error:", error);
+                Swal.fire(
+                    'Error!',
+                    'An unexpected error occurred. Please try again.',
+                    'error'
+                );
+            }
         } finally {
             isLoading.value = false;
         }
     }
 };
+
 </script>
 
 <template>
@@ -100,12 +119,12 @@ const requestAppointment = async (assessmentId) => {
                         <table class="w-full border-collapse border border-gray-300">
                             <thead>
                                 <tr class="bg-blue-100 text-gray-800 text-left">
-                                    <th scope="col" class="py-4 px-5 border-b">Date</th>
-                                    <th scope="col" class="py-4 px-5 border-b">Type</th>
-                                    <th scope="col" class="py-4 px-5 border-b">Score</th>
-                                    <th scope="col" class="py-4 px-5 border-b">Severity</th>
-                                    <th scope="col" class="py-4 px-5 border-b">Impact</th>
-                                    <th scope="col" class="py-4 px-5 border-b">Appointment Status</th>
+                                    <th scope="col" class="py-4 px-5 border-b text-left">Date</th>
+                                    <th scope="col" class="py-4 px-5 border-b text-left">Type</th>
+                                    <th scope="col" class="py-4 px-5 border-b text-left">Score</th>
+                                    <th scope="col" class="py-4 px-5 border-b text-left">Severity</th>
+                                    <th scope="col" class="py-4 px-5 border-b text-left">Impact</th>
+                                    <th scope="col" class="py-4 px-5 border-b text-left">Appointment Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,7 +147,7 @@ const requestAppointment = async (assessmentId) => {
                                     <td class="py-4 px-5 text-gray-700">
                                         {{ assessment.impact ?? 'Not Available' }}
                                     </td>
-                                    <td class="py-4 px-5 text-center">
+                                    <td class="py-4 px-5 text-left">
                                         <template v-if="assessment.appointment_status === 'none'">
                                             <button
                                                 @click="requestAppointment(assessment.id)"
@@ -138,18 +157,25 @@ const requestAppointment = async (assessmentId) => {
                                                 <span v-else>Request Appointment</span>
                                             </button>
                                         </template>
-                                        <template v-else-if="assessment.appointment_status === 'pending'">
-                                            <span class="text-yellow-500 font-semibold">
-                                                Pending Approval
-                                            </span>
+                                        <template v-if="assessment.appointment_status === 'pending'">
+                                            <span class="text-yellow-500 font-semibold">Pending Approval</span>
                                             <div v-if="assessment.appointment_date">
-                                                <span class="text-gray-600">Scheduled for: {{ formatDate(assessment.appointment_date) }}</span>
-                                            </div>
+                                            <span class="text-gray-600">Scheduled for: {{ formatDate(assessment.appointment_date) }}</span>
+                                        </div>
                                         </template>
                                         <template v-else-if="assessment.appointment_status === 'approved'">
-                                            <span class="text-green-500 font-semibold">
-                                                Approved - {{ formatDate(assessment.schedule_at) }}
-                                            </span>
+                                        <span class="text-green-500 font-semibold ">
+                                        Approved -
+                                        {{ new Date(assessment.appointment_date).toLocaleString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        second: 'numeric',
+                                        hour12: true
+                                        }) }}
+                                        </span>
                                         </template>
                                         <template v-else-if="assessment.appointment_status === 'completed'">
                                             <span class="text-gray-600 font-semibold">Completed</span>

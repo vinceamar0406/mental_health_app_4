@@ -146,7 +146,7 @@ const submitForm = () => {
       </div>
       <div class="bg-blue-100 p-6 rounded-lg shadow-md">
         <h4 class="text-xl font-semibold text-blue-400">Privacy & Security</h4>
-        <p class="text-black mt-2">Your mental health information is sensitive. Our platform employs industry-leading security measures to ensure your data remains private, confidential, and protected at all times.</p>
+        <p class="text-black mt-2">Your mental health information is sensitive. Our platform employs security measures to ensure your data remains private, confidential, and protected at all times.</p>
       </div>
     </div>
   </div>
