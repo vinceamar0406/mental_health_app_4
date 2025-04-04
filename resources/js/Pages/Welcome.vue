@@ -190,7 +190,7 @@ const submitForm = () => {
             <!-- Team Member 4 -->
             <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center md:col-start-2">
     <img src="/images/2x2-Brix.png" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
-    <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Xian Angelo Martinez</h4>
+    <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Brix Arabejo Mirote</h4>
     <p class="text-blue-400">Guidance Counselor</p>
   </div>
     </div>
