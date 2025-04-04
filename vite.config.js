@@ -19,5 +19,8 @@ export default defineConfig({
     ],
     build: {
         outDir: 'dist',  // Explicitly set the output directory to 'dist'
+        rollupOptions: {
+            external: ['ziggy'],
+        },
     },
 });
