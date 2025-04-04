@@ -98,7 +98,7 @@ const submitForm = () => {
   <div class="md:w-1/2">
     <p class="uppercase tracking-widest text-lg text-black">Empower Your Mind, Elevate Your Life</p>
     <h1 class="text-5xl font-extrabold text-blue-500 leading-tight">Your Journey to Better Mental Health Starts Here</h1>
-    <p class="text-xl text-black mt-4">Counsel & Care offers comprehensive tools and resources for mental health assessment, screening, and support—designed to help you understand and improve your wellbeing.</p>
+    <p class="text-xl text-black mt-4">Counsel & Care offers comprehensive tools for mental health assessment, screening, and appointment scheduling with experienced guidance counselors to support your mental health journey.</p>
     <Link :href="route('register')" class="mt-6 inline-block bg-blue-500 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition-all transform hover:scale-105 focus:ring-4 focus:ring-blue-400 focus:outline-none">
       Get Started Today
     </Link>
@@ -176,23 +176,23 @@ const submitForm = () => {
 
       <!-- Team Member 2 -->
       <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center">
-        <img src="https://source.unsplash.com/150x150/?woman,face" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
+        <img src="/images/2x2-Paul.jpg" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
         <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Paul Christian Orioque</h4>
         <p class="text-blue-400">Researcher and Documentation</p>
       </div>
 
             <!-- Team Member 3 -->
             <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center">
-        <img src="https://source.unsplash.com/150x150/?woman,face" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
+        <img src="/images/2x2-Matt.jpg" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
         <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Matt John Santos</h4>
         <p class="text-blue-400">Researcher and Machine Learning Integration</p>
       </div>
             <!-- Team Member 4 -->
-            <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center">
-        <img src="https://source.unsplash.com/150x150/?woman,face" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
-        <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Xian Angelo Martinez</h4>
-        <p class="text-blue-400">Researcher and User Interface </p>
-      </div>
+            <div class="bg-blue-100 p-6 rounded-lg shadow-lg text-center md:col-start-2">
+    <img src="/images/2x2-Brix.png" class="w-32 h-32 mx-auto rounded-full shadow-lg" alt="Team Member">
+    <h4 class="text-black mt-2 max-w-2xl mx-auto text-center">Xian Angelo Martinez</h4>
+    <p class="text-blue-400">Guidance Counselor</p>
+  </div>
     </div>
   </div>
 </div>

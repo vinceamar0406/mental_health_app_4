@@ -4,10 +4,6 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'; // Import AdminLayout
 import { Head } from '@inertiajs/vue3'; // Import the Head component
 import { defineProps } from 'vue';
 import { Link } from '@inertiajs/vue3'; // Import Link from Inertia
-import { ref } from 'vue';
-
-// Get current URL to manage active link state
-const { url } = usePage();
 
 const props = defineProps({
   totalUsers: Number,

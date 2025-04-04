@@ -1,185 +1,192 @@
 <template>
     <Head title="Appointments" />
     <AdminLayout>
-      <div class="flex-1 p-6">
-        <div class="bg-white shadow-lg rounded-lg p-6">
-          <h1 class="text-4xl font-bold text-gray-800">Appointments</h1>
-          <p class="text-lg text-gray-700 mt-2">Manage all appointment requests.</p>
-
-          <!-- Return Button -->
+      <div class="flex-1 p-8 space-y-8">
+        <!-- Title and Return Button Section -->
+        <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-6xl mx-auto flex justify-between items-center">
+          <div>
+            <h1 class="text-4xl font-semibold text-gray-900">Appointments</h1>
+            <p class="text-gray-600 mt-2">Manage all appointment requests efficiently.</p>
+          </div>
           <Link :href="route('admin.home')"
-                class="inline-block mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200 ease-in-out"
+                class="inline-block px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200 ease-in-out"
                 role="button"
                 aria-label="Return to Home">
             &larr; Return to Home
           </Link>
+        </div>
 
-          <!-- Search & Filter -->
-          <div class="mt-6">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search by user name, assessment, or status..."
-              class="p-3 border-2 rounded-lg w-full bg-gray-200 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 ease-in-out"
-            />
-          </div>
+        <!-- Search Input Section -->
+        <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-6xl mx-auto">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            placeholder="Search by user name, assessment, or status..."
+          />
+        </div>
 
-          <!-- Appointments Table -->
-          <div class="mt-6 overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-700 sm:table-auto">
-              <thead class="bg-blue-200">
-                <tr>
-                  <th class="border border-gray-700 px-4 py-2 text-left">User</th>
-                  <th class="border border-gray-700 px-4 py-2 text-left">Assessment Type</th>
-                  <th class="border border-gray-700 px-4 py-2 text-left">Scheduled Date</th>
-                  <th class="border border-gray-700 px-4 py-2 text-left">Status</th>
-                  <th class="border border-gray-700 px-4 py-2 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="appointment in filteredAppointments" :key="appointment.id" class="border-b border-gray-700 hover:bg-blue-50">
-                  <td class="border border-gray-700 px-4 py-2 text-gray-800">{{ appointment.user.name }}</td>
-                  <td class="border border-gray-700 px-4 py-2 text-gray-800">{{ appointment.assessment.type }}</td>
+        <!-- Appointments Table Section -->
+        <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-6xl mx-auto overflow-x-auto">
+          <table class="w-full border-collapse border border-gray-700 sm:table-auto">
+            <thead class="bg-blue-200">
+              <tr>
+                <th class="border border-gray-700 px-4 py-2 text-left">User</th>
+                <th class="border border-gray-700 px-4 py-2 text-left">Assessment Type</th>
+                <th class="border border-gray-700 px-4 py-2 text-left">Scheduled Date</th>
+                <th class="border border-gray-700 px-4 py-2 text-left">Status</th>
+                <th class="border border-gray-700 px-4 py-2 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="appointment in filteredAppointments" :key="appointment.id" class="border-b border-gray-700 hover:bg-blue-50">
+                <td class="border border-gray-700 px-4 py-2 text-gray-800">{{ appointment.user.name }}</td>
+                <td class="border border-gray-700 px-4 py-2 text-gray-800">{{ appointment.assessment.type }}</td>
 
-                  <!-- Scheduled Date Column -->
-                  <td class="border border-gray-700 px-4 py-2 text-gray-800">
-  <span v-if="appointment.appointment_date">
-    {{ new Date(appointment.appointment_date).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
-                hour12: true
-                }) }}
-                </span>
-                <span v-else>Not scheduled yet</span>
+                <!-- Scheduled Date Column -->
+                <td class="border border-gray-700 px-4 py-2 text-gray-800">
+                  <span v-if="appointment.appointment_date">
+                    {{ new Date(appointment.appointment_date).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      second: 'numeric',
+                      hour12: true
+                    }) }}
+                  </span>
+                  <span v-else>Not scheduled yet</span>
                 </td>
-                  <td class="border border-gray-700 px-4 py-2">
-                    <span
-                      class="px-4 py-2 rounded-lg text-sm font-semibold"
-                      :class="statusClass(appointment.status)"
-                    >
-                      {{ appointment.status }}
-                    </span>
-                  </td>
+                <td class="border border-gray-700 px-4 py-2">
+                  <span
+                    class="px-4 py-2 rounded-lg text-sm font-semibold"
+                    :class="statusClass(appointment.status)"
+                  >
+                    {{ appointment.status }}
+                  </span>
+                </td>
 
-                  <td class="border border-gray-700 px-4 py-2 text-center">
-                    <div v-if="appointment.status === 'pending'">
-                      <input
-                        v-model="appointment.scheduled_at"
-                        type="datetime-local"
-                        class="p-3 border-2 rounded-lg w-36 mb-2 bg-gray-700 text-white"
-                      />
-                      <button
-                        @click="approveAppointment(appointment)"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
-                      >
-                        Approve Appointment
-                      </button>
-                    </div>
+                <td class="border border-gray-700 px-4 py-2 text-center">
+                  <div v-if="appointment.status === 'pending'" class="flex items-center space-x-6">
+                    <input
+                      v-model="appointment.scheduled_at"
+                      type="datetime-local"
+                      class="p-2 border-2 rounded-lg w-36 bg-gray-700 text-white"
+                        style="height: 40px; line-height: 40px;"
+                    />
                     <button
-                      v-if="appointment.status === 'approved'"
-                      @click="completeAppointment(appointment.id)"
-                      class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
+                      @click="approveAppointment(appointment)"
+                      class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
+                        style="height: 40px; display: flex; align-items: center; justify-content: center;"
                     >
-                      Mark as Completed
+                      Approve Appointment
                     </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                  </div>
+                  <button
+                    v-if="appointment.status === 'approved'"
+                    @click="completeAppointment(appointment.id)"
+                    class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg mx-auto block"
+                  >
+                    Mark as Completed
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </AdminLayout>
   </template>
 
-<script setup>
-import AdminLayout from '@/Layouts/AdminLayout.vue';  // Import AdminLayout
-import { Head, Link } from '@inertiajs/vue3';
-import { defineProps, computed, ref } from 'vue';
-import axios from 'axios';
-import Swal from 'sweetalert2';  // Assuming SweetAlert2 is included in your project
+  <script setup>
+  import AdminLayout from '@/Layouts/AdminLayout.vue';
+  import { Head, Link } from '@inertiajs/vue3';
+  import { defineProps, computed, ref } from 'vue';
+  import axios from 'axios';
+  import Swal from 'sweetalert2';
 
-const props = defineProps({
-  appointments: Array,
-});
-
-const searchQuery = ref("");
-const filteredAppointments = computed(() => {
-  return props.appointments.filter((appointment) => {
-    return (
-      appointment.user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      appointment.assessment.type.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      appointment.status.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+  const props = defineProps({
+    appointments: Array,
   });
-});
 
-const statusClass = (status) => {
-  switch (status) {
-    case "pending":
-      return "bg-yellow-500";
-    case "approved":
-      return "bg-blue-600";
-    case "completed":
-      return "bg-green-600";
-    default:
-      return "bg-gray-500";
-  }
-};
-
-const approveAppointment = async (appointment) => {
-  try {
-    // Make the API call to approve the appointment
-    const response = await axios.post(`/appointments/${appointment.id}/approve`, {
-      scheduled_at: appointment.scheduled_at, // This is the date you want to set in the appointment_date field
+  const searchQuery = ref("");
+  const filteredAppointments = computed(() => {
+    return props.appointments.filter((appointment) => {
+      return (
+        appointment.user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        appointment.assessment.type.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        appointment.status.toLowerCase().includes(searchQuery.value.toLowerCase())
+      );
     });
-
-    // Update the appointment status and scheduled_at in local state
-    const updatedAppointment = response.data.appointment;
-    const index = props.appointments.findIndex((app) => app.id === updatedAppointment.id);
-    if (index !== -1) {
-      props.appointments[index] = updatedAppointment;
-    }
-
-    Swal.fire("Success!", "Appointment approved.", "success");
-  } catch (error) {
-    Swal.fire("Error!", "Something went wrong.", "error");
-  }
-};
-
-
-const completeAppointment = async (appointmentId) => {
-  // Trigger confirmation before marking as completed
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "Do you want to mark this appointment as completed?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, mark as completed!",
   });
 
-  if (result.isConfirmed) {
+  const statusClass = (status) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-500";
+      case "approved":
+        return "bg-blue-600";
+      case "completed":
+        return "bg-green-600";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
+  const approveAppointment = async (appointment) => {
     try {
-      // Call the API to complete the appointment
-      await axios.post(`/appointments/${appointmentId}/complete`);
-      // Show success message
-      Swal.fire("Success!", "Appointment marked as completed.", "success");
+      Swal.fire({
+        title: "Approving Appointment...",
+        text: "Please wait while we process the request.",
+        imageUrl: 'https://via.placeholder.com/150',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        willOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      const response = await axios.post(`/appointments/${appointment.id}/approve`, {
+        scheduled_at: appointment.scheduled_at,
+      });
+
+      const updatedAppointment = response.data.appointment;
+      const index = props.appointments.findIndex((app) => app.id === updatedAppointment.id);
+      if (index !== -1) {
+        props.appointments[index] = updatedAppointment;
+      }
+
+      Swal.fire("Success!", "Appointment approved.", "success");
+      location.reload();
     } catch (error) {
-      // Show error message if something went wrong
       Swal.fire("Error!", "Something went wrong.", "error");
     }
-  }
-};
-</script>
+  };
+
+  const completeAppointment = async (appointmentId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to mark this appointment as completed?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, mark as completed!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.post(`/appointments/${appointmentId}/complete`);
+        Swal.fire("Success!", "Appointment marked as completed.", "success");
+      } catch (error) {
+        Swal.fire("Error!", "Something went wrong.", "error");
+      }
+    }
+  };
+  </script>
 
   <style scoped>
-  /* Additional custom styles */
   table {
     width: 100%;
     margin-top: 20px;
