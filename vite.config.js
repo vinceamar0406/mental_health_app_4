@@ -17,10 +17,12 @@ export default defineConfig({
             },
         }),
     ],
+    optimizeDeps: {
+        exclude: ['ziggy'],  // Exclude Ziggy to prevent server-side dependencies from being bundled
+    },
     build: {
-        outDir: 'dist',  // Explicitly set the output directory to 'dist'
         rollupOptions: {
-            external: ['ziggy'],
+            external: ['ziggy-js'],  // Externalize Ziggy to prevent bundling
         },
     },
 });
