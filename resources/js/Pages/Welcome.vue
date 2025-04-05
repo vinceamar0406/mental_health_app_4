@@ -98,7 +98,7 @@ const submitForm = () => {
   <div class="md:w-1/2">
     <p class="uppercase tracking-widest text-lg text-black">Empower Your Mind, Elevate Your Life</p>
     <h1 class="text-5xl font-extrabold text-blue-500 leading-tight">Your Journey to Better Mental Health Starts Here</h1>
-    <p class="text-xl text-black mt-4">Counsel & Care offers comprehensive tools for mental health assessment, screening, and appointment scheduling with experienced guidance counselors to support your mental health journey.</p>
+    <p class="text-xl text-black mt-4">Counsel & Care offers comprehensive tools for mental health assessment, screening, and appointment scheduling with experienced Guidance Counselors to support your mental health journey.</p>
     <Link :href="route('register')" class="mt-6 inline-block bg-blue-500 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition-all transform hover:scale-105 focus:ring-4 focus:ring-blue-400 focus:outline-none">
       Get Started Today
     </Link>
@@ -112,48 +112,45 @@ const submitForm = () => {
 
 
     <!-- About Section -->
-<div id="about" class="min-h-screen flex flex-col items-center text-center bg-blue-100 text-white px-6 py-16">
-  <h2 class="text-4xl font-extrabold text-blue-400 animate-fade-in">About Counsel Care</h2>
+<div id="about" class="min-h-screen flex flex-col items-center text-center bg-blue-100 text-white px-3 py-3">
+  <h2 class="text-4xl font-extrabold text-blue-400 animate-fade-in">About Counsel & Care</h2>
 
   <p class="text-lg text-black mt-4 max-w-3xl animate-fade-in delay-100">
     Counsel & Care was developed by mental health professionals to bridge the gap between professional care and daily mental wellness.
-    We believe that understanding your mental health should be straightforward and supportive. Our platform provides <span class="font-semibold">confidential screening, comprehensive assessments,</span> and <span class="font-semibold">valuable resources</span> — all designed to empower you on your mental health journey.
+    We believe that understanding your mental health should be straightforward and supportive. Our platform provides <span class="font-semibold">confidential screening, comprehensive assessments,</span> and <span class="font-semibold">valuable resources</span> — all designed to help  you on your mental health journey.
   </p>
 
   <!-- Features Section -->
-  <div class="mt-12 w-full max-w-5xl text-center animate-slide-in">
-    <h3 class="text-2xl font-semibold text-blue-400 mt-12">Our Features</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+  <div class="w-full max-w-5xl text-center animate-slide-in">
+    <h3 class="text-2xl font-semibold text-blue-400 mt-3">Our Features</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
       <div class="bg-blue-100 p-6 rounded-lg shadow-md">
         <h4 class="text-xl font-semibold text-blue-400">Mental Health Screening</h4>
-        <p class="text-black mt-2">Quick, confidential screening tools to help identify potential mental health concerns and guide your next steps. Our scientifically validated questionnaires provide insights into common conditions like anxiety, depression, and stress.</p>
+        <p class="text-black mt-2 text-justify" style="text-justify: inter-character;">Confidential screenings to identify potential mental health concerns like anxiety, depression, and stress, offering helpful insights for next steps.</p>
       </div>
       <div class="bg-blue-100 p-6 rounded-lg shadow-md">
         <h4 class="text-xl font-semibold text-blue-400">Comprehensive Assessments</h4>
-        <p class="text-black mt-2">In-depth evaluation tools that provide detailed insights into various aspects of your mental health. These assessments help track progress over time and identify specific areas for improvement or professional support.</p>
+        <p class="text-black mt-2 text-justify" style="text-justify: inter-character;">In-depth assessments that provide a clearer understanding of your mental health, highlighting areas where professional support may be beneficial.</p>
       </div>
       <div class="bg-blue-100 p-6 rounded-lg shadow-md">
         <h4 class="text-xl font-semibold text-blue-400">Educational Resources</h4>
-        <p class="text-black mt-2">Access a library of evidence-based articles, guides, and self-help tools to better understand mental health conditions and develop effective coping strategies for everyday challenges.</p>
+        <p class="text-black mt-2 text-justify" style="text-justify: inter-character;">Access a collection of evidence-based articles and tools to better understand mental health and develop effective coping strategies.</p>
       </div>
       <div class="bg-blue-100 p-6 rounded-lg shadow-md">
         <h4 class="text-xl font-semibold text-blue-400">Appointment Scheduling</h4>
-        <p class="text-black mt-2">Easily schedule appointments with mental health professionals based on your assessment results. Our system helps connect you with the right specialist for your specific needs.</p>
-      </div>
-      <div class="bg-blue-100 p-6 rounded-lg shadow-md">
-        <h4 class="text-xl font-semibold text-blue-400">Progress Tracking</h4>
-        <p class="text-black mt-2">Monitor your mental health journey with personalized dashboards that track assessment results over time, helping you visualize improvements and identify patterns.</p>
+        <p class="text-black mt-2 text-justify" style="text-justify: inter-character;">Easily schedule appointments with mental health professionals based on your needs, connecting you to the Guidance Counselor for support.</p>
       </div>
       <div class="bg-blue-100 p-6 rounded-lg shadow-md">
         <h4 class="text-xl font-semibold text-blue-400">Privacy & Security</h4>
-        <p class="text-black mt-2">Your mental health information is sensitive. Our platform employs security measures to ensure your data remains private, confidential, and protected at all times.</p>
+        <p class="text-black mt-2 text-justify" style="text-justify: inter-character;">Your mental health data is secure. We implement strong privacy measures to protect your information at all times.</p>
       </div>
     </div>
   </div>
 
+
   <!-- Call-to-Action Button -->
   <a href="#resources"
-     class="mt-8 inline-block bg-blue-500 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition-all transform hover:scale-105 focus:ring-4 focus:ring-blue-400 focus:outline-none"
+     class="mt-2 inline-block bg-blue-500 text-white px-3 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition-all transform hover:scale-105 focus:ring-4 focus:ring-blue-400 focus:outline-none"
      onclick="document.getElementById('resources').scrollIntoView({ behavior: 'smooth' }); return false;">
     Explore Resources
   </a>
@@ -198,59 +195,60 @@ const submitForm = () => {
 </div>
 
     <!-- Resources Section -->
-<section id="resources" class="min-h-screen bg-blue-100 text-white px-6 py-16">
+<section id="resources" class="min-h-screen bg-blue-100 text-white px-6 py-6">
   <div class="max-w-6xl mx-auto text-center">
-    <h2 class="text-4xl font-extrabold text-blue-400">Mental Health Resources</h2>
+    <h2 class="text-4xl font-extrabold text-blue-400 ">Mental Health Resources</h2>
     <p class="text-lg text-black mt-4 max-w-3xl mx-auto">
       Access evidence-based mental health guides, self-help articles, and expert advice to support your well-being.
     </p>
   </div>
 
   <!-- Section Image -->
-  <div class="mt-10 flex justify-center">
-    <img src="https://static.vecteezy.com/system/resources/previews/003/332/223/non_2x/mental-health-awareness-day-concept-free-vector.jpg"
-      alt="Mental Health Awareness"
-      class="w-full max-w-md rounded-lg shadow-lg">
-  </div>
+<div class="mt-3 flex justify-center">
+  <img src="https://static.vecteezy.com/system/resources/previews/003/332/223/non_2x/mental-health-awareness-day-concept-free-vector.jpg"
+    alt="Mental Health Awareness"
+    class="w-full max-w-xs rounded-lg shadow-lg">
+</div>
+
 
   <!-- Resource Categories -->
-  <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-    <!-- Articles -->
-    <div class="bg-blue-100 p-6 rounded-lg shadow-lg hover:bg-blue-400 transition">
-      <h3 class="text-xl font-semibold text-blue-700">Mental Health Articles</h3>
-      <p class="text-black mt-2">
-        Read expert-written articles on anxiety, depression, and stress management.
-      </p>
-      <a @click.prevent="openArticles" class="mt-4 inline-block text-blue-700 font-semibold hover:text-blue-900 transition cursor-pointer">
-  Explore Articles →
-</a>
-    </div>
-
-    <!-- Videos -->
-    <div class="bg-blue-100 p-6 rounded-lg shadow-lg hover:bg-blue-400 transition">
-      <h3 class="text-xl font-semibold text-blue-700">Video Library</h3>
-      <p class="text-black mt-2">
-        Watch engaging videos on coping strategies and mental wellness tips.
-      </p>
-      <a @click.prevent="openVideos" class="mt-4 inline-block text-blue-700 font-semibold hover:text-blue-900 transition cursor-pointer">
-  Watch Now →
-</a>
-    </div>
-
-    <!-- Self-Help Tools -->
-    <div class="bg-blue-100 p-6 rounded-lg shadow-lg hover:bg-blue-400 transition">
-      <h3 class="text-xl font-semibold text-blue-700">Self-Help Toolkit</h3>
-      <p class="text-black mt-2">
-        Download workbooks and exercises designed to improve mental health.
-      </p>
-      <a @click.prevent="openResources" class="mt-4 inline-block text-blue-700 font-semibold hover:text-blue-900 transition cursor-pointer">
-  Download Resources →
-</a>
-    </div>
+  <div class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+  <!-- Articles -->
+  <div class="bg-blue-100 p-6 rounded-lg shadow-lg hover:bg-blue-400 transition">
+    <h3 class="text-xl font-semibold text-blue-700">Mental Health Articles</h3>
+    <p class="text-black mt-2 text-justify">
+        Discover expert-written articles on mental health challenges and solutions for college students, covering topics like anxiety, depression, and stress management.
+    </p>
+    <a @click.prevent="openArticles" class="mt-4 inline-block text-blue-700 font-semibold hover:text-blue-900 transition cursor-pointer">
+      Explore Articles →
+    </a>
   </div>
 
+  <!-- Videos -->
+  <div class="bg-blue-100 p-6 rounded-lg shadow-lg hover:bg-blue-400 transition">
+    <h3 class="text-xl font-semibold text-blue-700">Video Library</h3>
+    <p class="text-black mt-2 text-justify">
+        Watch curated videos that provide practical advice on coping strategies, emotional resilience, and self-care to support mental wellness in college life.
+    </p>
+    <a @click.prevent="openVideos" class="mt-4 inline-block text-blue-700 font-semibold hover:text-blue-900 transition cursor-pointer">
+      Watch Now →
+    </a>
+  </div>
+
+  <!-- Self-Help Toolkit -->
+  <div class="bg-blue-100 p-6 rounded-lg shadow-lg hover:bg-blue-400 transition">
+    <h3 class="text-xl font-semibold text-blue-700">Self-Help Toolkit</h3>
+    <p class="text-black mt-2 text-justify">
+        Access downloadable worksheets and exercises based on Cognitive Behavioral Therapy (CBT) to help improve mental health and build healthy coping skills.
+    </p>
+    <a @click.prevent="openResources" class="mt-4 inline-block text-blue-700 font-semibold hover:text-blue-900 transition cursor-pointer">
+      Download Resources →
+    </a>
+  </div>
+</div>
+
   <!-- Call to Action -->
-  <div class="mt-16 text-center">
+  <div class="mt-2 text-center">
     <a href="#contact"
    class="mt-8 inline-block bg-blue-400 text-whote px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-500 transition-all transform hover:scale-105 focus:ring-4 focus:ring-blue-400 focus:outline-none"
    onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); return false;">
@@ -261,7 +259,7 @@ const submitForm = () => {
 
 
     <!-- Contact Section -->
-    <section id="contact" class="min-h-screen flex flex-col md:flex-row items-center bg-blue-100 text-white px-6 py-16 md:py-32">
+    <section id="contact" class="min-h-screen flex flex-col md:flex-row items-center bg-blue-100 text-white px-6 py-6 md:py-12">
       <div class="md:w-1/2 bg-blue-100 text-black rounded-lg shadow-lg p-8 max-w-lg mx-auto">
         <h2 class="text-3xl font-bold bg-blue-500 text-black px-4 py-2 rounded-t-lg">Contact Us</h2>
         <p class="mt-4">

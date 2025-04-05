@@ -49,12 +49,12 @@ const showPrivacyPolicy = (assessment) => {
         html: `
             <p><strong>Republic Act No. 10173 - Data Privacy Act of 2012</strong></p>
             <p style="margin-bottom: 15px;">This website collects, processes, and stores personal data in accordance with the Data Privacy Act of 2012 (RA 10173). By proceeding, you acknowledge and agree that:</p>
-            <ul style="text-align:left; margin-bottom: 25px;">
-                <li>✅ Your responses will be collected solely for providing insights into your mental health.</li>
-                <li>✅ Your data will be kept confidential and will not be shared without consent.</li>
-                <li>✅ This screening is for informational purposes only and is not a medical diagnosis.</li>
-                <li>✅ You have the right to access, correct, or request deletion of your personal data.</li>
-            </ul>
+            <ul style="text-align: left; margin-bottom: 25px; list-style-type: disc; padding-left: 20px;">
+    <li>Your responses will be collected solely for providing insights into your mental health.</li>
+    <li>Your data will be kept confidential and will not be shared without consent.</li>
+    <li>This screening is for informational purposes only and is not a medical diagnosis.</li>
+    <li>You have the right to access, correct, or request deletion of your personal data.</li>
+</ul>
             <hr style="margin: 15px 0;">
             <p>For more details, visit the <a href="https://www.privacy.gov.ph" target="_blank" style="color: #007bff; text-decoration: underline;">National Privacy Commission (NPC)</a>.</p>
         `,

@@ -79,7 +79,7 @@ const submitAssessment = async () => {
         try {
             router.post('/assessment/depression/store', {
                 user_id: page.props.auth?.user?.id,
-                responses: Object.values(answers).slice(0, 7),
+                responses: Object.values(answers).slice(0, 9),
                 impact: answers.impact,
                 total_score: totalScore.value,
                 severity: severity.value

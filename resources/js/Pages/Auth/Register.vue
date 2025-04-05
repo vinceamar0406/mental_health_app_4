@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -108,36 +107,36 @@ const buttonClasses = computed(() => ({
                         </div>
                         <InputError class="mt-2" :message="form.errors.password" />
                     </div>
-                    <!-- Confirm Password Field -->
-                    <div>
-                        <InputLabel for="password_confirmation" value="Confirm Password" class="text-gray-800 dark:text-gray-300" />
-                        <div class="relative">
-                            <TextInput
-                                        id="password_confirmation"
-                                        :type="isConfirmPasswordVisible ? 'text' : 'password'"
-                                        class="w-full px-4 py-3 mt-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all duration-300"
-                                        v-model="form.password_confirmation"
-                                        required
-                                        autocomplete="new-password"
-                                />
 
-                        </div>
-                        <!-- Toggle Password Visibility -->
-                        <button
-                                type="button"
-                                @click="isConfirmPasswordVisible = !isConfirmPasswordVisible"
-                                class="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-500 transition-all duration-300"
-                                aria-label="Toggle password visibility"
-                            >
-                                <svg v-if="isConfirmPasswordVisible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M10 3a7 7 0 00-7 7 7 7 0 0014 0 7 7 0 00-7-7zm0 12a5 5 0 110-10 5 5 0 010 10z" />
-                                </svg>
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-			</div>
-                        <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                    <!-- Confirm Password Field -->
+<div>
+    <InputLabel for="password_confirmation" value="Confirm Password" class="text-gray-800 dark:text-gray-300" />
+    <div class="relative">
+        <TextInput
+            id="password_confirmation"
+            :type="isConfirmPasswordVisible ? 'text' : 'password'"
+            class="w-full px-4 py-3 mt-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all duration-300"
+            v-model="form.password_confirmation"
+            required
+            autocomplete="new-password"
+        />
+        <!-- Toggle Confirm Password Visibility -->
+        <button
+            type="button"
+            @click="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+            class="absolute inset-y-0 right-4 flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-500 transition-all duration-300"
+            aria-label="Toggle password visibility"
+        >
+            <svg v-if="isConfirmPasswordVisible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 3a7 7 0 00-7 7 7 7 0 0014 0 7 7 0 00-7-7zm0 12a5 5 0 110-10 5 5 0 010 10z" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+    <InputError class="mt-2" :message="form.errors.password_confirmation" />
+</div>
 
                     <!-- Register Button -->
                     <div>

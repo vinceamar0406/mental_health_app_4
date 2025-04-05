@@ -106,7 +106,7 @@ const submitPTSDAssessment = async () => {
         try {
             router.post('/assessment/ptsd/store', {
                 user_id: page.props.auth?.user?.id,
-                responses: Object.values(answers).slice(0, 7),
+                responses: Object.values(answers).slice(0, 20),
                 impact: answers.impact,
                 total_score: totalScore.value,
                 severity: severity.value
