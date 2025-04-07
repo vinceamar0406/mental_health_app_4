@@ -13,6 +13,7 @@ use App\Http\Controllers\PTSDAssessmentController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\StressAssessmentController;
+use App\Http\Controllers\SubstanceUseAssessmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PredictionController;
 use App\Http\Controllers\AssessmentController;
@@ -81,6 +82,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/assessment/eating-disorder/store', [EatingDisorderAssessmentController::class, 'storeEatingDisorder'])->name('eatingdisorder.assessment.store');
     Route::get('/assessment/eating-disorder/results', [EatingDisorderAssessmentController::class, 'showEatingDisorderResults'])->name('assessment.eatingdisorder.results');
 
+    Route::post('/assessment/substance-use/store', [SubstanceUseAssessmentController::class, 'storeSubstanceUse'])->name('substance.assessment.store');
+    Route::get('/assessment/substance-use/results', [SubstanceUseAssessmentController::class, 'showSubstanceUse'])->name('assessment.substance-use.results');
 
 });
 
@@ -118,6 +121,12 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         $notification->markAsRead();
         return response()->json(['message' => 'Notification marked as read']);
     })->name('admin.notifications.read');
+
+    Route::post('/notifications/clear', function () {
+    auth()->user()->notifications()->delete(); // Delete all notifications for the authenticated user
+    return response()->json(['message' => 'All notifications cleared']);
+})->name('admin.notifications.clear');
+
 
 
     // ✅ Other Admin Pages

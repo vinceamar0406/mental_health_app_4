@@ -95,6 +95,72 @@ const requestAppointment = async (assessmentId) => {
     }
 };
 
+const markAsComplete = async (assessmentId) => {
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to mark this appointment as complete?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, mark as complete!',
+    });
+
+    if (result.isConfirmed) {
+        try {
+            isLoading.value = true;
+            const response = await axios.post(route('appointments.complete', { appointment: assessmentId }));
+
+            if (response.status === 200) {
+                // Find the assessment after the API request
+                const assessment = assessments.value.find(a => a.id === assessmentId);
+
+                if (assessment) {
+                    // Update the assessment's status
+                    assessment.appointment_status = 'completed';
+                    assessment.completed_at = response.data.appointment.completed_at;
+
+                    Swal.fire(
+                        'Appointment Completed!',
+                        'This appointment has been successfully marked as complete.',
+                        'success'
+                    );
+
+                    // Refresh the page to show the updated status
+                    router.reload();
+                } else {
+                    console.error('Assessment not found');
+                    Swal.fire('Error!', 'Assessment not found. Please try again.', 'error');
+                }
+            } else {
+                // If it's not a 200 response, handle it as an error
+                throw new Error('Unexpected response from the server.');
+            }
+        } catch (error) {
+            console.error("Error marking appointment as complete:", error);
+
+            if (error.response) {
+                console.error("Error response:", error.response);
+                Swal.fire(
+                    'Error!',
+                    error.response?.data?.message || 'An unexpected error occurred. Please try again.',
+                    'error'
+                );
+            } else {
+                console.error("General error:", error);
+                Swal.fire(
+                    'Error!',
+                    'An unexpected error occurred. Please try again.',
+                    'error'
+                );
+            }
+        } finally {
+            isLoading.value = false;
+        }
+    }
+};
+
+
 </script>
 
 <template>
@@ -158,27 +224,27 @@ const requestAppointment = async (assessmentId) => {
                                             </button>
                                         </template>
                                         <template v-if="assessment.appointment_status === 'pending'">
-                                            <span class="text-yellow-500 font-semibold">Pending Approval</span>
+                                            <span class="text-yellow-600 font-semibold">Pending Approval</span>
                                             <div v-if="assessment.appointment_date">
-                                            <span class="text-gray-600">Scheduled for: {{ formatDate(assessment.appointment_date) }}</span>
                                         </div>
                                         </template>
                                         <template v-else-if="assessment.appointment_status === 'approved'">
-                                        <span class="text-green-500 font-semibold ">
-                                        Approved -
-                                        {{ new Date(assessment.appointment_date).toLocaleString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                        hour: 'numeric',
-                                        minute: 'numeric',
-                                        second: 'numeric',
-                                        hour12: true
-                                        }) }}
-                                        </span>
-                                        </template>
-                                        <template v-else-if="assessment.appointment_status === 'completed'">
-                                            <span class="text-gray-600 font-semibold">Completed</span>
+                                            <span class="text-green-600 font-semibold">
+                                            Approved - {{ new Date(assessment.appointment_date).toLocaleString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                            hour: 'numeric',
+                                            minute: 'numeric',
+                                            second: 'numeric',
+                                            hour12: true
+                                            }) }}
+                                            </span>
+                                            </template>
+                                            <template v-if="assessment.appointment_status === 'completed'">
+                                            <span class="text-green-400 font-semibold">Completed</span>
+                                            <div v-if="assessment.completed_at">
+                                        </div>
                                         </template>
                                     </td>
                                 </tr>

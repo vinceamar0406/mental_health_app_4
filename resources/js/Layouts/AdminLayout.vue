@@ -7,6 +7,9 @@ import { ref } from 'vue';
 
 // Get current URL to manage active link state
 const { url } = usePage();
+
+// Manage mobile menu state
+const isMobileMenuOpen = ref(false);
 </script>
 
 <template>
@@ -23,7 +26,7 @@ const { url } = usePage();
               </Link>
             </div>
 
-            <!-- Admin Navigation Links -->
+            <!-- Admin Navigation Links (Hidden on Mobile) -->
             <div class="hidden sm:flex space-x-8">
               <NavLink
                 :href="route('admin.home')"
@@ -56,9 +59,18 @@ const { url } = usePage();
             </div>
           </div>
 
-          <!-- User Profile Dropdown -->
+          <!-- Hamburger Icon (Visible only on mobile) -->
+          <div class="sm:hidden flex items-center">
+            <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-800 dark:text-white">
+              <span class="sr-only">Open menu</span>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- User Profile Dropdown (Hidden on Mobile) -->
           <div class="hidden sm:flex sm:items-center">
-            <!-- User Profile Dropdown -->
             <div class="relative ms-3">
               <Dropdown align="right" width="48">
                 <template #trigger>
@@ -84,6 +96,40 @@ const { url } = usePage();
         </div>
       </div>
     </nav>
+
+    <!-- Mobile Menu (Visible when isMobileMenuOpen is true) -->
+    <div v-show="isMobileMenuOpen" class="sm:hidden">
+      <div class="bg-blue-200 dark:bg-blue-300 space-y-4 p-4">
+        <NavLink
+          :href="route('admin.home')"
+          :active="route().current('admin.home')"
+          class="block px-4 py-2 rounded-md hover:bg-blue-300 transition-all duration-200"
+        >
+          Dashboard
+        </NavLink>
+        <NavLink
+          :href="route('admin.users')"
+          :active="route().current('admin.users')"
+          class="block px-4 py-2 rounded-md hover:bg-blue-300 transition-all duration-200"
+        >
+          Users
+        </NavLink>
+        <NavLink
+          :href="route('admin.assessments')"
+          :active="route().current('admin.assessments')"
+          class="block px-4 py-2 rounded-md hover:bg-blue-300 transition-all duration-200"
+        >
+          Assessments
+        </NavLink>
+        <NavLink
+          :href="route('admin.appointments')"
+          :active="route().current('admin.appointments')"
+          class="block px-4 py-2 rounded-md hover:bg-blue-300 transition-all duration-200"
+        >
+          Appointments
+        </NavLink>
+      </div>
+    </div>
 
     <!-- Main Content Section -->
     <main>
@@ -111,5 +157,11 @@ nav .flex {
 nav a {
   display: block;
   padding: 8px 16px; /* Ensure consistent padding around links */
+}
+
+@media (max-width: 640px) {
+  .sm\:hidden {
+    display: none;
+  }
 }
 </style>

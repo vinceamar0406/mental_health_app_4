@@ -1,59 +1,196 @@
 <script setup>
-import { onMounted } from 'vue';
-import Swal from 'sweetalert2'; // Import SweetAlert
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { useRouter } from 'vue-router'; // To navigate back
+import Header from '@/Components/Header.vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
+import { ref, computed, reactive } from 'vue';
+import Swal from 'sweetalert2';
 
-onMounted(() => {
-    // Show SweetAlert when the component is mounted
-    Swal.fire({
-        title: 'Maintenance Mode',
-        text: 'The assessment is temporarily unavailable and is under maintenance. We apologize for the inconvenience.',
-        icon: 'warning',
-        showConfirmButton: false, // Hides the "OK" button
-        showCancelButton: true,  // Shows only the "Go Back" button
-        cancelButtonText: 'Go Back', // Text for the "Go Back" button
-        reverseButtons: true, // To place the "Go Back" button on the left
-        focusCancel: true, // Focus on "Go Back" button by default
-    }).then((result) => {
-        if (result.isDismissed) {
-            // Redirect to the previous page when "Go Back" is clicked
-            window.history.back();
-        }
-    });
+const page = usePage();
+const isLoading = ref(false);
+
+const answers = reactive({
+    q1: null, q2: null, q3: null, q4: null, q5: null,
+    q6: null, q7: null, q8: null, q9: null, q10: null,
+    impact: null
 });
+
+// DAST-10 Severity Levels
+const severityLevels = [
+    { min: 0, max: 2, label: "Low level" },
+    { min: 3, max: 5, label: "Moderate level" },
+    { min: 6, max: 8, label: "Substantial level" },
+    { min: 9, max: 10, label: "Severe level" },
+];
+
+const totalScore = computed(() => {
+    return Object.values(answers).reduce((sum, val) => sum + (parseInt(val) || 0), 0);
+});
+
+const severity = computed(() => {
+    return severityLevels.find(level => totalScore.value >= level.min && totalScore.value <= level.max)?.label || "Unknown";
+});
+
+const submitAssessment = async () => {
+    if (isLoading.value) return;
+
+    const unansweredKey = Object.keys(answers).find(key => answers[key] === null || answers[key] === "");
+
+    if (unansweredKey) {
+        Swal.fire({
+            icon: "error",
+            title: "Incomplete Answers",
+            text: "Please answer all questions before submitting.",
+            confirmButtonColor: "#3085d6",
+        });
+        return;
+    }
+
+    const result = await Swal.fire({
+        title: "Submit Assessment?",
+        text: "Do you want to save the assessment in the database?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, save it!",
+        cancelButtonText: "No, just view results",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33"
+    });
+
+    if (result.isConfirmed) {
+        Swal.fire({
+            title: "Submitting...",
+            text: "Please wait while we save your assessment.",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        isLoading.value = true;
+        try {
+            router.post('/assessment/substance-use/store', {
+                user_id: page.props.auth?.user?.id,
+                responses: Object.values(answers).slice(0, 10),
+                impact: answers.impact,
+                total_score: totalScore.value,
+                severity: severity.value
+            }, {
+                replace: true,
+                onSuccess: () => {
+                    isLoading.value = false;
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Your assessment has been recorded.",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    setTimeout(() => {
+                        router.get('/assessment/substance-use/results');
+                    }, 2000);
+                },
+                onError: () => {
+                    isLoading.value = false;
+                    Swal.fire("Error", "Failed to submit assessment. Please try again.", "error");
+                }
+            });
+        } catch (error) {
+            console.error("Error submitting assessment:", error);
+            Swal.fire("Error", "Failed to submit assessment. Please try again.", "error");
+            isLoading.value = false;
+        }
+    } else {
+        Swal.fire({
+            title: "Redirecting...",
+            text: "Please wait while we load your results.",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        setTimeout(() => {
+            Swal.close();
+            router.get('/assessment/substance-use/results');
+        }, 500);
+    }
+};
 </script>
 
 <template>
-    <Head title="Substance Use Disorder Assessment" />
-
     <AuthenticatedLayout>
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                            Substance Use Disorder Assessment
-                        </h2>
-                        <p class="mt-2">Answer the following questions to assess your substance use disorder symptoms.</p>
+        <Head title="Drug Abuse Assessment" />
 
-                        <!-- Substance Use Disorder Assessment Form (Optional if you still want to keep it) -->
-                        <form class="mt-4">
-                            <div class="mb-4">
-                                <label class="block text-gray-700 dark:text-gray-300">Question 1</label>
-                                <input type="text" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
+        <div class="min-h-screen bg-blue-100 dark:bg-gray-900 flex items-center justify-center">
+            <div class="w-full max-w-4xl bg-blue-200 dark:bg-gray-800 shadow-lg rounded-lg border border-blue-300 dark:border-gray-700">
+
+                <Header title="DAST-10 Drug Abuse Screening" subtitle="Answer the following questions with Yes or No." />
+
+                <div class="p-8 text-gray-900 dark:text-gray-100">
+                    <div class="space-y-6">
+                        <div v-for="(question, index) in [
+                            'Have you used drugs other than those required for medical reasons?',
+                            'Do you abuse more than one drug at a time?',
+                            'Are you always able to stop using drugs when you want to?',
+                            'Have you had “blackouts” or “flashbacks” as a result of drug use?',
+                            'Do you ever feel bad or guilty about your drug use?',
+                            'Does your spouse (or parents) ever complain about your involvement with drugs?',
+                            'Have you neglected your family because of your use of drugs?',
+                            'Have you engaged in illegal activities in order to obtain drugs?',
+                            'Have you ever experienced withdrawal symptoms (felt sick) when you stopped taking drugs?',
+                            'Have you had medical problems as a result of your drug use (e.g., memory loss, hepatitis, convulsions, bleeding)?'
+                        ]" :key="index" class="p-4 bg-blue-100 dark:bg-gray-700 rounded-lg">
+                            <label class="block font-medium text-lg text-gray-800 dark:text-gray-200">
+                                {{ index + 1 }}. {{ question }}
+                            </label>
+                            <div class="flex gap-6 mt-2">
+                                <label class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                    <input type="radio" :value="1" v-model="answers[`q${index + 1}`]" class="form-radio" />
+                                    Yes
+                                </label>
+                                <label class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                    <input type="radio" :value="0" v-model="answers[`q${index + 1}`]" class="form-radio" />
+                                    No
+                                </label>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="mb-4">
-                                <label class="block text-gray-700 dark:text-gray-300">Question 2</label>
-                                <input type="text" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
-                            </div>
+                    <div class="p-4 bg-blue-100 dark:bg-gray-700 rounded-lg mt-6">
+                        <label class="block text-lg font-medium text-gray-800 dark:text-gray-200">Impact Level</label>
+                        <select v-model="answers.impact" class="form-select mt-2 p-2 border border-gray-300 rounded-lg w-full">
+                            <option value="">Select Impact Level</option>
+                            <option value="Low">Low</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
 
-                            <button type="submit" class="px-4 py-2 font-semibold text-white bg-blue-600 rounded hover:bg-blue-700">
-                                Submit
-                            </button>
-                        </form>
+                    <div class="mt-8 p-4 bg-blue-100 dark:bg-gray-700 rounded-lg">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">DAST-10 Severity Levels</h3>
+                        <p class="text-gray-800 dark:text-gray-300">Your total score determines the severity of drug abuse risk.</p>
+                        <table class="w-full mt-2 border border-gray-300 dark:border-gray-600">
+                            <thead>
+                                <tr class="bg-blue-300 dark:bg-gray-600">
+                                    <th class="p-2 border">Total Score</th>
+                                    <th class="p-2 border">Severity Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="level in severityLevels" :key="level.label">
+                                    <td class="p-2 border">{{ level.min }}–{{ level.max }}</td>
+                                    <td class="p-2 border">{{ level.label }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-6">
+                        <button @click="submitAssessment"
+                            class="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
+                            {{ isLoading ? 'Submitting...' : 'Submit Assessment' }}
+                        </button>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-gray-200 dark:bg-gray-700 rounded-lg">
+                        <h3 class="text-lg font-semibold">Reference</h3>
+                        <p class="text-sm">Skinner, H. A. (1982). The Drug Abuse Screening Test. *Addictive Behavior*, 7(4), 363–371. DOI: 10.1016/0306-4603(82)90005-3</p>
                     </div>
                 </div>
             </div>

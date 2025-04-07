@@ -6,7 +6,6 @@ import Swal from 'sweetalert2'; // Import SweetAlert2
 // Get assessment results from Laravel backend
 const page = usePage();
 const latestResult = page.props.latest_result || { total_score: 0, severity: "Unknown", impact: "Not provided" };
-const pastResults = page.props.past_results || []; // Store previous assessments
 
 // Store assessment data for navigation
 let lastAssessment = null;

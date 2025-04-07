@@ -6,7 +6,6 @@ import Swal from 'sweetalert2'; // Import SweetAlert2
 // Get assessment results from Laravel backend
 const page = usePage();
 const latestResult = page.props.latest_result || { total_score: 0, severity: "Unknown", impact: "Not provided" };
-const pastResults = page.props.past_results || []; // Store previous assessments
 
 // Store assessment data for navigation
 let lastAssessment = null;
@@ -19,8 +18,8 @@ const confirmRetakeAssessment = () => {
         text: "If you choose to retake the assessment, your previous responses will remain unchanged. Would you like to proceed?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Yes, Retake",
-        cancelButtonText: "No, Stay",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         width: "600px", // Wider modal for better readability
         customClass: {
             container: 'swal2-container',
@@ -39,6 +38,7 @@ const confirmRetakeAssessment = () => {
     });
 };
 
+
 // Function to show the second prompt (Data Privacy Act Notice)
 const showPrivacyPolicy = (assessment) => {
     lastAssessment = assessment; // Store assessment for back navigation
@@ -48,12 +48,12 @@ const showPrivacyPolicy = (assessment) => {
         html: `
             <p><strong>Republic Act No. 10173 - Data Privacy Act of 2012</strong></p>
             <p style="margin-bottom: 15px;">This website collects, processes, and stores personal data in accordance with the Data Privacy Act of 2012 (RA 10173). By proceeding, you acknowledge and agree that:</p>
-            <ul style="text-align:left; margin-bottom: 25px;">
-                <li>✅ Your responses will be collected solely for providing insights into your mental health.</li>
-                <li>✅ Your data will be kept confidential and will not be shared without consent.</li>
-                <li>✅ This screening is for informational purposes only and is not a medical diagnosis.</li>
-                <li>✅ You have the right to access, correct, or request deletion of your personal data.</li>
-            </ul>
+            <ul style="text-align: left; margin-bottom: 25px; list-style-type: disc; padding-left: 20px;">
+    <li>Your responses will be collected solely for providing insights into your mental health.</li>
+    <li>Your data will be kept confidential and will not be shared without consent.</li>
+    <li>This screening is for informational purposes only and is not a medical diagnosis.</li>
+    <li>You have the right to access, correct, or request deletion of your personal data.</li>
+</ul>
             <hr style="margin: 15px 0;">
             <p>For more details, visit the <a href="https://www.privacy.gov.ph" target="_blank" style="color: #007bff; text-decoration: underline;">National Privacy Commission (NPC)</a>.</p>
         `,
@@ -87,6 +87,14 @@ const showLoadingAnimation = () => {
                 // Redirect to the assessment page after a delay
                 window.location.href = route('stress_assessment');
             }, 600); // Simulating a delay before redirecting
+        },
+        customClass: {
+            container: 'swal2-container',
+            popup: 'swal2-popup custom-modal',
+            title: 'swal2-title text-lg font-semibold',
+            content: 'swal2-content text-sm',
+            confirmButton: 'swal2-confirm bg-blue-600 text-white hover:bg-blue-700',
+            cancelButton: 'swal2-cancel bg-gray-400 text-white hover:bg-gray-500'
         }
     });
 };

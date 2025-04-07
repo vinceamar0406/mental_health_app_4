@@ -58,7 +58,8 @@ const props = defineProps({
         <!-- Recent Activity Section -->
         <div class="bg-white shadow-lg rounded-lg w-full max-w-6xl p-6 mt-8">
           <h2 class="text-2xl font-semibold text-gray-900">Recent Activity</h2>
-          <table class="min-w-full mt-4">
+          <div class="overflow-x-auto mt-4">
+          <table class="min-w-full">
             <thead>
               <tr class="border-b">
                 <th class="text-left py-3 px-4">User</th>
@@ -75,6 +76,7 @@ const props = defineProps({
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         <!-- User Engagement Section -->
