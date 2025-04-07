@@ -9,7 +9,7 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'assessment_id', 'status', 'appointment_date'];
+    protected $fillable = ['user_id', 'assessment_id', 'status', 'appointment_date', 'completed_at'];
 
     // Relationships
     public function user() {

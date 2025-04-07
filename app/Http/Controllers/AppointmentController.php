@@ -68,27 +68,28 @@ class AppointmentController extends Controller
 }
 public function completeAppointment(Appointment $appointment)
 {
-    // Ensure only admins can complete the appointment
+    // Ensure only admins can complete the appointment$appointment->completed_at = now(); // Optional: make sure this field exists in your DB
+
     if (Auth::user()->role !== 'admin') {
         return response()->json(['error' => 'Unauthorized access.'], 403);
     }
 
-    // Check if the appointment is already completed
-    if ($appointment->status === 'completed') {
-        return response()->json(['error' => 'Appointment is already completed.'], 400);
+    // Allow only approved appointments to be completed
+    if ($appointment->status !== 'approved') {
+        return response()->json(['error' => 'Only approved appointments can be marked as completed.'], 400);
     }
 
     // Mark the appointment as completed and set the completion date
     $appointment->status = 'completed';
-    $appointment->completed_at = now(); // or use any other relevant date field
+    $appointment->completed_at = now(); // Optional: make sure this field exists in your DB
     $appointment->save();
 
-    // Return the updated appointment data along with a success message
     return response()->json([
         'message' => 'Appointment marked as completed successfully.',
-        'appointment' => $appointment,  // Return the updated appointment data
+        'appointment' => $appointment,
     ]);
 }
+
 
 
 }
