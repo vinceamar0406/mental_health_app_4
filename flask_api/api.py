@@ -6,47 +6,34 @@ import requests
 
 app = Flask(__name__)
 
-# Define model directory
+# Folder where model files are stored
 model_dir = "bert_final"
 os.makedirs(model_dir, exist_ok=True)
 
-# Google Drive file IDs for model and configuration files
-model_files = {
-    "config.json": "1MWU5hL38YuywDM1CFnabEhRrMQME39V9",
-    "model.safetensors": "1kbgkW4BY_U8IwW9e-8VirqpRlzYssJiq",
-    "special_tokens_map.json": "1-ObUREY47SF2QIlLWBhoNrjmxngAjsym",
-    "tokenizer_config.json": "1SwltBONE0lWghkSlZwGA3Z-ygNa63kNo",
-    "vocab.txt": "1Th-WorHC_TtgrG7uNBtdSs54-4n9VcAz"
-}
+# Only download model.safetensors since other files are already in the repo
+model_file_id = "1kbgkW4BY_U8IwW9e-8VirqpRlzYssJiq"  # Your actual file ID
+model_filename = "model.safetensors"
+model_filepath = os.path.join(model_dir, model_filename)
 
-# Google Drive file IDs for additional configuration files
-file_urls = {
-    "requirements.txt": "1rO3befu0yqQBy4PvkBfhzVK5bq1uDFbE",
-    ".render.yaml": "11escyKyeHf225vlGf-lb9FHR9Ym9o-0n"
-}
-
-# Download function
-def download_from_drive(filename, file_id):
-    filepath = os.path.join(model_dir, filename)
-    if not os.path.exists(filepath):
-        print(f"Downloading {filename}...")
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+def download_model_file():
+    if not os.path.exists(model_filepath):
+        print(f"Downloading {model_filename} from Google Drive...")
+        url = f"https://drive.google.com/uc?export=download&id={model_file_id}"
         response = requests.get(url)
-        with open(filepath, "wb") as f:
+        with open(model_filepath, "wb") as f:
             f.write(response.content)
+        print(f"Downloaded {model_filename}")
+    else:
+        print(f"{model_filename} already exists.")
 
-# Download model files if not present
-for fname, fid in model_files.items():
-    download_from_drive(fname, fid)
+# Download model file if missing
+download_model_file()
 
-# Download additional config files (requirements.txt and .render.yaml)
-for fname, fid in file_urls.items():
-    download_from_drive(fname, fid)
-
-# Load model and tokenizer
+# Load tokenizer and model
 tokenizer = BertTokenizer.from_pretrained(model_dir, local_files_only=True)
 model = BertForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
 
+# Class labels
 class_labels = {
     0: "Anxiety",
     1: "Depression",
