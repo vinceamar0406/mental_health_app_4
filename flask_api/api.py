@@ -7,7 +7,7 @@ import requests
 app = Flask(__name__)
 
 # Define model directory
-model_dir = "bert_model"
+model_dir = "bert_final"
 os.makedirs(model_dir, exist_ok=True)
 
 # Google Drive file IDs for model and configuration files
