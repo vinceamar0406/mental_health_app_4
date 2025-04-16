@@ -10,7 +10,7 @@ app = Flask(__name__)
 model_dir = "bert_model"
 os.makedirs(model_dir, exist_ok=True)
 
-# Google Drive file IDs
+# Google Drive file IDs for model and configuration files
 model_files = {
     "config.json": "1MWU5hL38YuywDM1CFnabEhRrMQME39V9",
     "model.safetensors": "1kbgkW4BY_U8IwW9e-8VirqpRlzYssJiq",
@@ -19,7 +19,13 @@ model_files = {
     "vocab.txt": "1Th-WorHC_TtgrG7uNBtdSs54-4n9VcAz"
 }
 
-# Download model files if not present
+# Google Drive file IDs for additional configuration files
+file_urls = {
+    "requirements.txt": "1rO3befu0yqQBy4PvkBfhzVK5bq1uDFbE",
+    ".render.yaml": "11escyKyeHf225vlGf-lb9FHR9Ym9o-0n"
+}
+
+# Download function
 def download_from_drive(filename, file_id):
     filepath = os.path.join(model_dir, filename)
     if not os.path.exists(filepath):
@@ -29,8 +35,12 @@ def download_from_drive(filename, file_id):
         with open(filepath, "wb") as f:
             f.write(response.content)
 
-# Download all required files
+# Download model files if not present
 for fname, fid in model_files.items():
+    download_from_drive(fname, fid)
+
+# Download additional config files (requirements.txt and .render.yaml)
+for fname, fid in file_urls.items():
     download_from_drive(fname, fid)
 
 # Load model and tokenizer
