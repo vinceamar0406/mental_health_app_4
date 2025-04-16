@@ -1,18 +1,42 @@
 from flask import Flask, request, jsonify
-import joblib
+from transformers import BertTokenizer, BertForSequenceClassification
+import torch
 import os
-import numpy as np
+import requests
 
 app = Flask(__name__)
 
-# Load the TF-IDF vectorizer and trained models
-vectorizer_path = os.path.join(os.path.dirname(__file__), "tfidf_vectorizer.pkl")
-model_path = os.path.join(os.path.dirname(__file__), "random_forest_weighted.pkl")
+# Define model directory
+model_dir = "bert_model"
+os.makedirs(model_dir, exist_ok=True)
 
-vectorizer = joblib.load(vectorizer_path)
-model = joblib.load(model_path)
+# Google Drive file IDs
+model_files = {
+    "config.json": "1MWU5hL38YuywDM1CFnabEhRrMQME39V9",
+    "model.safetensors": "1kbgkW4BY_U8IwW9e-8VirqpRlzYssJiq",
+    "special_tokens_map.json": "1-ObUREY47SF2QIlLWBhoNrjmxngAjsym",
+    "tokenizer_config.json": "1SwltBONE0lWghkSlZwGA3Z-ygNa63kNo",
+    "vocab.txt": "1Th-WorHC_TtgrG7uNBtdSs54-4n9VcAz"
+}
 
-# Define class labels (Ensure this matches your training labels)
+# Download model files if not present
+def download_from_drive(filename, file_id):
+    filepath = os.path.join(model_dir, filename)
+    if not os.path.exists(filepath):
+        print(f"Downloading {filename}...")
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        response = requests.get(url)
+        with open(filepath, "wb") as f:
+            f.write(response.content)
+
+# Download all required files
+for fname, fid in model_files.items():
+    download_from_drive(fname, fid)
+
+# Load model and tokenizer
+tokenizer = BertTokenizer.from_pretrained(model_dir, local_files_only=True)
+model = BertForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
+
 class_labels = {
     0: "Anxiety",
     1: "Depression",
@@ -21,12 +45,7 @@ class_labels = {
     4: "Substance Use Disorder",
     5: "Eating Disorder",
     6: "Self-Harm Challenges",
-    7: "Attention Issues",
-    8: "Normal",  # Add additional labels
-    9: "Bipolar",
-    10: "Suicidal",
-    11: "Stress",
-    12: "Personality disorder"
+    7: "Attention Issues"
 }
 
 @app.route("/predict", methods=["POST"])
@@ -35,33 +54,22 @@ def predict():
         data = request.json
         responses = data.get("responses", [])
 
-        # Validate that there are enough responses
         if not responses or len(responses) < 5:
             return jsonify({"error": "Invalid input. Expected at least 5 responses."}), 400
 
-        # Combine the responses into a single string of text
         combined_text = " ".join(responses)
+        inputs = tokenizer(combined_text, return_tensors="pt", truncation=True, padding=True, max_length=512)
 
-        # Transform the text using the loaded TF-IDF vectorizer
-        transformed_input = vectorizer.transform([combined_text])
+        with torch.no_grad():
+            outputs = model(**inputs)
+            logits = outputs.logits
 
-        # Get the predicted class probabilities
-        probabilities = model.predict_proba(transformed_input)[0]  # Get probabilities for each class
-        predicted_index = np.argmax(probabilities)  # Index of highest probability class
-        predicted_condition = class_labels.get(predicted_index, "Unknown Condition")
+        predicted_class_id = torch.argmax(logits, dim=-1).item()
+        predicted_condition = class_labels.get(predicted_class_id, "Unknown Condition")
 
-        # Get the top 3 predictions and their confidence scores
-        top_indices = np.argsort(probabilities)[::-1][:3]  # Sort probabilities to get top 3
-        top_conditions = [
-            {"condition": class_labels[i], "confidence": round(probabilities[i] * 100, 2)}
-            for i in top_indices
-        ]
-
-        # Return the prediction result as a JSON response
         return jsonify({
             "predicted_condition": predicted_condition,
-            "confidence_score": round(probabilities[predicted_index] * 100, 2),
-            "top_3_predictions": top_conditions
+            "confidence_score": round(torch.softmax(logits, dim=-1)[0][predicted_class_id].item() * 100, 2)
         })
 
     except Exception as e:
