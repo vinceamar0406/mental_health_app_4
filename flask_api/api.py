@@ -7,7 +7,8 @@ import requests
 app = Flask(__name__)
 
 # ✅ Where local files are (from GitHub)
-model_dir = "flask_api"
+model_dir = os.path.join(os.path.dirname(__file__))  # Points to folder where api.py is
+
 
 # ✅ Google Drive model download info
 model_file_id = "1PxFyjeBWb28HPC-sUJ0lu3TxpT4GRobW"  # 🔥 PUT your actual model.safetensors FILE ID here
