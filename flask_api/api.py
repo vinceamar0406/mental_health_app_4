@@ -16,6 +16,9 @@ model_filepath = os.path.join(model_dir, model_filename)
 
 # ✅ Function to download model.safetensors
 def download_model_file():
+    if not os.path.exists(model_dir):
+        os.makedirs(model_dir)  # ✅ Create the directory if it doesn't exist
+
     if not os.path.exists(model_filepath):
         print(f"Downloading {model_filename} from Google Drive...")
         url = f"https://drive.google.com/uc?export=download&id={model_file_id}"
@@ -25,6 +28,7 @@ def download_model_file():
         print(f"Downloaded {model_filename}")
     else:
         print(f"{model_filename} already exists.")
+
 
 # ✅ Download model file if needed
 download_model_file()
