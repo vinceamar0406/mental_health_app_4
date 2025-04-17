@@ -14,7 +14,7 @@ model_filename = "model.safetensors"
 model_filepath = os.path.join(model_dir, model_filename)
 
 # ✅ Google Drive download setup
-model_file_id = "1PxFyjeBWb28HPC-sUJ0lu3TxpT4GRobW"  # <-- Your model file ID
+model_file_id = "1AQ8ZH5Fo8YDjKDMJdbFPZMEtIFyp_r_Z"  # <-- Your model file ID
 
 def download_model_file():
     if not os.path.exists(model_filepath):
