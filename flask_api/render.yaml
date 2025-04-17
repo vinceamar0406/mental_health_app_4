@@ -1,11 +1,11 @@
 services:
   - type: web
     name: mental-health-api
-    env: python
-    region: singapore  # or change to your nearest region
+    runtime: python
+    region: singapore  # Keep this as your region
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python flask_api/api.py
+    startCommand: gunicorn flask_api.api:app  # ✅ Use Gunicorn to start the app
     envVars:
       - key: PYTHON_VERSION
         value: 3.10

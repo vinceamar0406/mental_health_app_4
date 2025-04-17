@@ -1,20 +1,20 @@
 from flask import Flask, request, jsonify
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
 import torch
 import os
 import requests
 
 app = Flask(__name__)
 
-# Folder where model files are stored
-model_dir = "bert_final"
-os.makedirs(model_dir, exist_ok=True)
+# ✅ Where local files are (from GitHub)
+model_dir = "flask_api"
 
-# Only download model.safetensors since other files are already in the repo
-model_file_id = "1kbgkW4BY_U8IwW9e-8VirqpRlzYssJiq"  # Your actual file ID
+# ✅ Google Drive model download info
+model_file_id = "1PxFyjeBWb28HPC-sUJ0lu3TxpT4GRobW"  # 🔥 PUT your actual model.safetensors FILE ID here
 model_filename = "model.safetensors"
 model_filepath = os.path.join(model_dir, model_filename)
 
+# ✅ Function to download model.safetensors
 def download_model_file():
     if not os.path.exists(model_filepath):
         print(f"Downloading {model_filename} from Google Drive...")
@@ -26,23 +26,23 @@ def download_model_file():
     else:
         print(f"{model_filename} already exists.")
 
-# Download model file if missing
+# ✅ Download model file if needed
 download_model_file()
 
-# Load tokenizer and model
-tokenizer = BertTokenizer.from_pretrained(model_dir, local_files_only=True)
-model = BertForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
+# ✅ Load tokenizer and model
+tokenizer = DistilBertTokenizer.from_pretrained(model_dir, local_files_only=True)
+model = DistilBertForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
 
-# Class labels
+# ✅ Class labels based on your dataset
 class_labels = {
     0: "Anxiety",
-    1: "Depression",
-    2: "PTSD",
-    3: "Stress-Related Disorder",
-    4: "Substance Use Disorder",
-    5: "Eating Disorder",
-    6: "Self-Harm Challenges",
-    7: "Attention Issues"
+    1: "Attention Issues",
+    2: "Depression",
+    3: "Eating Disorder",
+    4: "PTSD",
+    5: "Self-Harm Challenges",
+    6: "Stress-Related Disorder",
+    7: "Substance Use Disorder"
 }
 
 @app.route("/predict", methods=["POST"])
@@ -51,19 +51,26 @@ def predict():
         data = request.json
         responses = data.get("responses", [])
 
+        # ✅ Input validation
         if not responses or len(responses) < 5:
             return jsonify({"error": "Invalid input. Expected at least 5 responses."}), 400
 
+        # ✅ Combine all responses
         combined_text = " ".join(responses)
+
+        # ✅ Tokenize the input text
         inputs = tokenizer(combined_text, return_tensors="pt", truncation=True, padding=True, max_length=512)
 
+        # ✅ Predict with model (no gradient needed)
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits
 
+        # ✅ Get predicted class
         predicted_class_id = torch.argmax(logits, dim=-1).item()
         predicted_condition = class_labels.get(predicted_class_id, "Unknown Condition")
 
+        # ✅ Return prediction and confidence score
         return jsonify({
             "predicted_condition": predicted_condition,
             "confidence_score": round(torch.softmax(logits, dim=-1)[0][predicted_class_id].item() * 100, 2)
@@ -73,4 +80,4 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)  # Gunicorn will take over in production
